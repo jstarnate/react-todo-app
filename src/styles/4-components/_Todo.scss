@@ -1,0 +1,76 @@
+.todo {
+	flex: 1;
+	margin-top: 64px;
+	padding: 0 1rem 1.5rem 1rem;
+
+	&__form-wrap {
+		margin-top: 1.5rem;
+	}
+
+	&__input {
+		border: 1px solid $primary;
+		flex: 1;
+		font-size: 1rem;
+		padding: 0.5rem 1rem;
+		border-radius: 10px 0 0 10px;
+	}
+
+	&__submit {
+		padding: 0 1rem;
+		background: $primary;
+		border-radius: 0 10px 10px 0;
+	}
+
+	&__list {
+		overflow: auto;
+	}
+
+	&__item {
+		flex-wrap: wrap;
+		border: 1px solid #c4c4c4;
+		padding: 0.5rem 1rem;
+		border-radius: 10px;
+		margin-top: 1.5rem;
+
+		&:hover {
+			box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+		}
+	}
+
+	&__checkbox {
+		display: none;
+	}
+
+	&__description,
+	&__text {
+		text-overflow: ellipsis;
+	  overflow: hidden;
+	  white-space: nowrap;
+	}
+
+	&__description {
+		flex: 1 1 0;
+		color: $black;
+		font-weight: 700;
+		cursor: pointer;
+	}
+
+	&__text {
+		margin-left: 0.5rem;
+
+		@media screen and (max-width: 480px) {
+			font-size: calc(14px + (20 - 14) * (100vw - 320px) / (1366 - 320));
+		}
+	}
+
+	&__button {
+		&:last-child {
+			margin-left: 0.5rem;
+		}
+		&:hover {
+			rect, path {
+				fill: $primary;
+			}
+		}
+	}
+}

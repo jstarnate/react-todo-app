@@ -1,0 +1,19 @@
+.active-category {
+	position: relative;
+
+	&:before {
+		content: '';
+		display: block;
+		position: absolute;
+		width: 5px;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		background: $secondary;
+	}
+
+	> button:first-child {
+		font-weight: 700;
+		color: $secondary;
+	}
+}

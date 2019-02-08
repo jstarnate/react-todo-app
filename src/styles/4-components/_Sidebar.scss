@@ -1,0 +1,86 @@
+.sidebar {
+	min-height: 100vh;
+	width: 250px;
+
+	@media screen and (max-width: 768px) {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 2;
+	}
+
+	&__wrap {
+		position: fixed;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		width: 250px;
+		background: $primary;
+		color: $secondary;
+
+		@media screen and (max-width: 768px) {
+			left: 0;
+		}
+	}
+
+	&__form-input {
+		border: none;
+		width: 100%;
+		padding: 1.25rem;
+		background: darken($primary, 5%);
+		font-size: 1rem;
+		color: $secondary;
+
+		&::placeholder {
+			color: lighten($primary, 30%);
+		}
+	}
+
+	&__form-submit {
+		display: none;
+	}
+
+	&__categories {
+		flex: 1;
+		overflow: auto;
+	}
+
+	&__nav-item:hover {
+		background: darken($primary, 3%);
+
+		.sidebar__delete-button {
+			opacity: 1;
+		}
+	}
+
+	&__link {
+		flex: 1;
+		font-size: 1rem;
+		color: lighten($primary, 40%);
+		text-align: left;
+		text-overflow: ellipsis;
+	  overflow: hidden;
+	  white-space: nowrap;
+		padding: 1rem 0 1rem 1rem;
+	}
+
+	&__delete-button {
+		margin-right: 1rem;
+		opacity: 0;
+
+		@media screen and (max-width: 768px) {
+			opacity: 1;
+		}
+	}
+
+	&__message {
+		text-align: center;
+		margin-top: 1rem;
+	}
+
+	&__icon {
+		display: inline-block;
+		margin: auto;
+	}
+}
