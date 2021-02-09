@@ -1,19 +1,27 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import Proptypes from 'prop-types';
-import { enableSidebar } from 'Actions/sidebar';
+import { useDispatch } from 'react-redux';
+import { set } from 'Actions';
 
-const AppMessage = ({ enableSidebar }) => (
-	<section className='app__message flex--center'>
-		<div>
-			<h1 className='app__message-text'>Choose a category first to see or add to-dos</h1>
-			<button className='app__message-button button' onClick={enableSidebar}>See categories</button>
-		</div>
-	</section>
-)
+function AppMessage() {
+    const dispatch = useDispatch();
 
-AppMessage.propTypes = {
-	enableSidebar: Proptypes.func
+    function enableSidebar() {
+        dispatch(set('showSidebar', true));
+    }
+
+    return (
+        <section className='app__message flex--center'>
+            <div>
+                <h1 className='app__message-text'>
+                    Choose a category first to see or add to-dos
+                </h1>
+                <button
+                    className='app__message-button button'
+                    onClick={enableSidebar}>
+                    See categories
+                </button>
+            </div>
+        </section>
+    );
 }
 
-export default connect(null, { enableSidebar })(AppMessage);
+export default AppMessage;

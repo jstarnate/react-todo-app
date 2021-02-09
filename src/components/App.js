@@ -1,68 +1,50 @@
-import React, { Component, Suspense, lazy } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import Sidebar from './Sidebar/Sidebar';
-import Spinner from './Spinner';
+import { Suspense, lazy, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Sidebar from 'Subcomponents/sidebar/index';
+import Spinner from 'Helpers/Spinner';
 import AppMessage from './AppMessage';
-import { mobileOn, mobileOff } from 'Actions/mobile';
-import * as sidebarActions from 'Actions/sidebar';
+import { set } from 'Actions';
 
-const mapStateToProps = ({ categories, category, mobile, showSidebar }) => ({ categories, category, mobile, showSidebar });
+const Todos = lazy(() => import('./subcomponents/todos/index'));
 
-const TodoWrap = lazy(() => import('./Todo/Wrap'));
+function App() {
+    const category = useSelector(state => state.category);
+    const mobile = useSelector(state => state.mobile);
+    const showSidebar = useSelector(state => state.showSidebar);
+    const dispatch = useDispatch();
 
-class App extends Component {
-	static propTypes = {
-		categories: PropTypes.arrayOf(PropTypes.object),
-		category: PropTypes.string,
-		mobile: PropTypes.bool,
-		showSidebar: PropTypes.bool,
-		mobileOn: PropTypes.func,
-		mobileOff: PropTypes.func,
-		enableSidebar: PropTypes.func,
-		disableSidebar: PropTypes.func
-	}
+    function checkWindowSize() {
+        if (window.innerWidth <= 768) {
+            dispatch(set('mobile', true));
+            dispatch(set('showSidebar', false));
+        } else {
+            dispatch(set('mobile', false));
+            dispatch(set('showSidebar', true));
+        }
+    }
 
-	componentDidMount() {
-		this.checkWindowSize();
-		window.addEventListener('resize', this.checkWindowSize);
-	}
+    useEffect(() => {
+        checkWindowSize();
+        window.addEventListener('resize', checkWindowSize);
 
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.checkWindowSize);
-	}
+        return () => {
+            window.removeEventListener('resize', checkWindowSize);
+        };
+    }, []);
 
-	checkWindowSize = () => {
-		const { mobileOn, mobileOff, enableSidebar, disableSidebar } = this.props;
+    return (
+        <section className='app flex'>
+            {showSidebar && <Sidebar />}
 
-		if(window.innerWidth <= 768) {
-			mobileOn();
-			disableSidebar();
-		} else {
-			mobileOff();
-			enableSidebar();
-		}
-	}
-
-	render() {
-		const { category, mobile, showSidebar } = this.props;
-
-		return(
-			<section className='app flex'>
-      	
-      	{ showSidebar && <Sidebar /> }
-
-      	{
-      		category
-      		? <Suspense fallback={<Spinner color='blue' />}>
-							<TodoWrap link={category} />
-						</Suspense>
-					: (mobile) ? <AppMessage /> : null
-      	}
-      
-      </section>
-		)
-	}
+            {category ? (
+                <Suspense fallback={<Spinner color='blue' />}>
+                    <Todos />
+                </Suspense>
+            ) : mobile ? (
+                <AppMessage />
+            ) : null}
+        </section>
+    );
 }
 
-export default connect(mapStateToProps, { mobileOn, mobileOff, ...sidebarActions })(App);
+export default App;

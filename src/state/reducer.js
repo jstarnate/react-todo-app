@@ -1,123 +1,52 @@
-import uuid from 'uuid/v4';
+export default (state, action) => {
+    if (action.type === 'SET') {
+        state[action.name] = action.payload;
+        return state;
+    }
 
-export const initialState = {
-	categories: [],
-	todos: [],
-	category: null,
-	addMode: false,
-	editMode: false,
-	editTarget: null,
-	mobile: false,
-	showSidebar: false
+    if (action.type === 'PUSH_ADD') {
+        state[action.name] = [...state[action.name], action.payload];
+        return state;
+    }
+
+    if (action.type === 'UNSHIFT_ADD') {
+        state[action.name] = [action.payload, ...state[action.name]];
+        return state;
+    }
+
+    if (action.type === 'PUSH_SPREAD') {
+        state[action.name] = [...state[action.name], ...action.payload];
+        return state;
+    }
+
+    if (action.type === 'UNSHIFT_ADD') {
+        state[action.name] = [...action.payload, ...state[action.name]];
+        return state;
+    }
+
+    if (action.type === 'UPDATE') {
+        const mapped = state[action.name].map(item => {
+            if (item.id === action.id) {
+                item = action.payload;
+            }
+
+            return item;
+        });
+
+        state[action.name] = mapped;
+
+        return state;
+    }
+
+    if (action.type === 'DELETE') {
+        const filtered = state[action.name].filter(
+            item => item.id !== action.id
+        );
+
+        state[action.name] = filtered;
+
+        return state;
+    }
+
+    return state;
 };
-
-export default (state = initialState, action) => {
-	switch(action.type) {
-		case 'ADD_CATEGORY':
-			const newCategory = {
-				id: (Date.now()).toString(),
-				name: action.name
-			};
-
-			return { ...state, categories: [ newCategory, ...state.categories ] };
-
-		case 'SELECT_CATEGORY':
-			return { ...state, category: action.name };
-
-		case 'DELETE_CATEGORY':
-			const filtered = state.categories.filter(category => category.id !== action.id);
-
-			return {
-				...state,
-				categories: filtered,
-				category: state.category === action.name ? null : state.category
-			};
-
-		case 'DELETE_TODOS_UNDER_CATEGORY':
-			return {
-				...state,
-				todos: state.todos.filter(todo => todo.category !== action.category)
-			};
-
-		case 'ADD_TODO':
-			const newTodo = {
-				id: uuid(),
-				description: action.description,
-				category: action.category,
-				done: false
-			};
-
-			return {
-				...state,
-				addMode: false,
-				todos: [ newTodo, ...state.todos ]
-			};
-
-		case 'TOGGLE_TODO':
-			return {
-				...state,
-				todos: state.todos.map(todo => {
-					if(todo.id === action.id) {
-						return { ...todo, done: !todo.done };
-					}
-					return todo;
-				})
-			};
-
-		case 'EDIT_TODO':
-			return {
-				...state,
-				addMode: false,
-				editMode: true,
-				editTarget: action.id
-			};
-
-		case 'SUBMIT_EDITED_TODO':
-			return {
-				...state,
-				todos: state.todos.map(todo => {
-					if(state.editTarget === todo.id) {
-						return { ...todo, description: action.description };
-					}
-					return todo;
-				}),
-				editMode: false,
-				editTarget: null
-			};
-
-		case 'DELETE_TODO':
-			return {
-				...state,
-				todos: state.todos.filter(todo => todo.id !== action.id)
-			};
-
-		case 'TOGGLE_ADD_MODE':
-			return {
-				...state,
-				addMode: !state.addMode,
-				editMode: false,
-				editTarget: null
-			};
-
-		case 'DISABLE_ADD_MODE':
-			return { ...state, addMode: false };
-
-		case 'DISABLE_EDIT_MODE':
-			return { ...state, editMode: false, editTarget: null };
-
-		case 'MOBILE_ON':
-			return { ...state, mobile: true };
-
-		case 'MOBILE_OFF':
-			return { ...state, mobile: false };
-
-		case 'SHOW_SIDEBAR':
-			return { ...state, showSidebar: true };
-
-		case 'HIDE_SIDEBAR':
-			return { ...state, showSidebar: false };
-
-		default:
-			return state;
-	}
-}

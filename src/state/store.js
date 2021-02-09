@@ -1,23 +1,11 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import state, { initialState } from './reducer';
+import { createStore } from 'redux';
+import reducer from './reducer';
+import state from './state';
 
-const data = JSON.parse(localStorage.getItem('state')) || {
-	categories: initialState.categories,
-	todos: initialState.todos
-};
-
-function saveState(states) {
-	localStorage.setItem('state', JSON.stringify(states));
-}
-
-const store = createStore(state, data, applyMiddleware(thunk));
-
-store.subscribe(() => {
-	saveState({
-		categories: store.getState().categories,
-		todos: store.getState().todos
-	});
-});
+const store = createStore(
+    reducer,
+    state,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 export default store;
